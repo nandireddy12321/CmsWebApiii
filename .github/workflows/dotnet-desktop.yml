@@ -28,23 +28,25 @@ jobs:
         run: |
           # Get the extracted version number
           EXTRACTED_VERSION=$(echo "${{ steps.extract_version.outputs.version }}")
-          
+
           # Define a variable to represent the placeholder in the version number
           VERSION_PLACEHOLDER='?'
 
           # Extract the build number from GITHUB_RUN_NUMBER
           BUILD_NUMBER=${GITHUB_RUN_NUMBER}
-          echo "$BUILD_NUMBER"
 
           # Update the version number by replacing the placeholder with the build number
-          UPDATED_VERSION=$(echo "${{EXTRACTED_VERSION//$VERSION_PLACEHOLDER/$BUILD_NUMBER}}")
-          
+          UPDATED_VERSION="${EXTRACTED_VERSION//$VERSION_PLACEHOLDER/$BUILD_NUMBER}"
 
           # Replace the version number placeholder in the csproj file
           sed -i "s/<Version>${EXTRACTED_VERSION}<\/Version>/<Version>${UPDATED_VERSION}<\/Version>/" CmsWebApi.csproj
 
-      - name: Build project
-        run: dotnet build CmsWebApi.csproj
+          # Check if the version was updated in the csproj file
+          if grep -q "${UPDATED_VERSION}" YourProject.csproj; then
+            echo "Updated Version: ${UPDATED_VERSION}"
+            echo "Version Updated in csproj file: Yes"
+          else
+            echo "Updated Version: ${UPDATED_VERSION}"
+            echo "Version Updated in csproj file: No"
+          fi
 
-
-    
