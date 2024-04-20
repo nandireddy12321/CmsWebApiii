@@ -36,8 +36,8 @@ jobs:
           # Extract the build number from GITHUB_RUN_NUMBER
           BUILD_NUMBER=${GITHUB_RUN_NUMBER}
 
-          # Update the version number by replacing the placeholder with the build number
-          UPDATED_VERSION="${EXTRACTED_VERSION//$VERSION_PLACEHOLDER/$BUILD_NUMBER}"
+          # Update the version number to include the build number
+          UPDATED_VERSION=$(echo "${EXTRACTED_VERSION//$VERSION_PLACEHOLDER/$BUILD_NUMBER}")
 
           # Replace the version number placeholder in the .csproj file
           sed -i "s/<Version>${EXTRACTED_VERSION}<\/Version>/<Version>${UPDATED_VERSION}<\/Version>/" CmsWebApi.csproj
@@ -46,4 +46,4 @@ jobs:
           echo "Updated Version: ${UPDATED_VERSION}"
           echo "Build Number: ${BUILD_NUMBER}"
 
-    
+      
