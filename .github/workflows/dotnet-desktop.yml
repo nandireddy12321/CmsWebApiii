@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Build 
 
 on:
   push:
@@ -21,6 +21,7 @@ jobs:
       - name: Extract version number
         id: extract_version
         run: |
+          # Extract the version number from the .csproj file
           VERSION=$(grep -oP '<Version>\K[^<]+' CmsWebApi.csproj)
           echo "::set-output name=version::$VERSION"
 
@@ -29,7 +30,7 @@ jobs:
           # Get the extracted version number
           EXTRACTED_VERSION=$(echo "${{ steps.extract_version.outputs.version }}")
 
-          # Define a variable to represent the placeholder in the version number
+          # Define the version placeholder
           VERSION_PLACEHOLDER='?'
 
           # Extract the build number from GITHUB_RUN_NUMBER
@@ -38,15 +39,11 @@ jobs:
           # Update the version number by replacing the placeholder with the build number
           UPDATED_VERSION="${EXTRACTED_VERSION//$VERSION_PLACEHOLDER/$BUILD_NUMBER}"
 
-          # Replace the version number placeholder in the csproj file
+          # Replace the version number placeholder in the .csproj file
           sed -i "s/<Version>${EXTRACTED_VERSION}<\/Version>/<Version>${UPDATED_VERSION}<\/Version>/" CmsWebApi.csproj
 
-          # Check if the version was updated in the csproj file
-          if grep -q "${UPDATED_VERSION}" CmsWebApi.csproj; then
-            echo "Updated Version: ${UPDATED_VERSION}"
-            echo "Version Updated in CmsWebApi: Yes"
-          else
-            echo "Updated Version: ${UPDATED_VERSION}"
-            echo "Version Updated in CmsWebApi: No"
-          fi
+          # Print the updated version and build number
+          echo "Updated Version: ${UPDATED_VERSION}"
+          echo "Build Number: ${BUILD_NUMBER}"
 
+    
