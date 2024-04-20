@@ -1,0 +1,48 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x' # adjust to your version
+
+      - name: Extract version number
+        id: extract_version
+        run: |
+          VERSION=$(grep -oP '<Version>\K[^<]+' CmsWebApi.csproj)
+          echo "::set-output name=version::$VERSION"
+
+      - name: Update version number
+        run: |
+          # Get the extracted version number
+          EXTRACTED_VERSION=$(echo "${{ steps.extract_version.outputs.version }}")
+
+          # Define a variable to represent the placeholder in the version number
+          VERSION_PLACEHOLDER='?'
+
+          # Extract the build number from GITHUB_RUN_NUMBER
+          BUILD_NUMBER=${GITHUB_RUN_NUMBER}
+
+          # Update the version number by replacing the placeholder with the build number
+          UPDATED_VERSION="${EXTRACTED_VERSION//$VERSION_PLACEHOLDER/$BUILD_NUMBER}"
+
+          # Replace the version number placeholder in the csproj file
+          sed -i "s/<Version>${EXTRACTED_VERSION}<\/Version>/<Version>${UPDATED_VERSION}<\/Version>/" CmsWebApi.csproj
+
+      - name: Build project
+        run: dotnet build CmsWebApi.csproj
+
+
+    
