@@ -59,4 +59,5 @@ jobs:
         run: |
           # Get the extracted version number
           EXTRACTED_VERSION=$(echo "${{ steps.extract_version_afterupdate.outputs.version }}")
-      
+      - name: Build project
+        run: dotnet build CmsWebApi.csproj
