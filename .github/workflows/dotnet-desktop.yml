@@ -28,7 +28,7 @@ jobs:
         run: |
           # Get the extracted version number
           EXTRACTED_VERSION=$(echo "${{ steps.extract_version.outputs.version }}")
-
+          
           # Define a variable to represent the placeholder in the version number
           VERSION_PLACEHOLDER='?'
 
@@ -37,6 +37,7 @@ jobs:
 
           # Update the version number by replacing the placeholder with the build number
           UPDATED_VERSION="${EXTRACTED_VERSION//$VERSION_PLACEHOLDER/$BUILD_NUMBER}"
+          echo "UPDATED_VERSION"
 
           # Replace the version number placeholder in the csproj file
           sed -i "s/<Version>${EXTRACTED_VERSION}<\/Version>/<Version>${UPDATED_VERSION}<\/Version>/" CmsWebApi.csproj
