@@ -41,7 +41,8 @@ jobs:
           UPDATED_VERSION=$(echo "${EXTRACTED_VERSION//$VERSION_PLACEHOLDER/$BUILD_NUMBER}")
 
           # Replace the version number placeholder in the .csproj file
-          sed -i "s/<Version>${EXTRACTED_VERSION}<\/Version>/<Version>${UPDATED_VERSION}<\/Version>/" CmsWebApi.csproj
+          sed -i "s/<Version_Prefix>${EXTRACTED_VERSION}<\/Version_Prefix>/<Version_Prefix>${UPDATED_VERSION}<\/Version_Prefix>/" CmsWebApi.csproj
+           sed -i "s/<Version>${EXTRACTED_VERSION}<\/Version>/<Version>${UPDATED_VERSION}<\/Version>/" CmsWebApi.csproj
 
           # Print the updated version and build number
           echo "Updated Version: ${UPDATED_VERSION}"
