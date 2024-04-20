@@ -42,11 +42,11 @@ jobs:
           sed -i "s/<Version>${EXTRACTED_VERSION}<\/Version>/<Version>${UPDATED_VERSION}<\/Version>/" CmsWebApi.csproj
 
           # Check if the version was updated in the csproj file
-          if grep -q "${UPDATED_VERSION}" YourProject.csproj; then
+          if grep -q "${UPDATED_VERSION}" CmsWebApi.csproj; then
             echo "Updated Version: ${UPDATED_VERSION}"
-            echo "Version Updated in csproj file: Yes"
+            echo "Version Updated in CmsWebApi: Yes"
           else
             echo "Updated Version: ${UPDATED_VERSION}"
-            echo "Version Updated in csproj file: No"
+            echo "Version Updated in CmsWebApi: No"
           fi
 
