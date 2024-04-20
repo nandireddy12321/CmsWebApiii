@@ -48,4 +48,15 @@ jobs:
           echo "Updated Version: ${UPDATED_VERSION}"
           echo "Build Number: ${BUILD_NUMBER}"
 
+      - name: Extract version number after update
+        id: extract_version_afterupdate
+        run: |
+          # Extract the version number from the .csproj file
+          VERSION=$(grep -oP '<Version>\K[^<]+' CmsWebApi.csproj)
+          echo "::set-output name=version::$VERSION"
+
+      - name: Update version number
+        run: |
+          # Get the extracted version number
+          EXTRACTED_VERSION=$(echo "${{ steps.extract_version_afterupdate.outputs.version }}")
       
