@@ -31,7 +31,7 @@ jobs:
           EXTRACTED_VERSION=$(echo "${{ steps.extract_version.outputs.version }}")
 
           # Define the version placeholder
-          VERSION_PLACEHOLDER='?'
+          VERSION_PLACEHOLDER="\?"
 
           # Extract the build number from GITHUB_RUN_NUMBER
           BUILD_NUMBER=${GITHUB_RUN_NUMBER}
