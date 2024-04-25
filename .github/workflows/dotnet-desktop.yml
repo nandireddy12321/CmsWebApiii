@@ -43,7 +43,9 @@ jobs:
         env:
           PASSWORD: ${{ secrets.PASSWORD }}
 
-                
+      - name: Wait for 30 seconds
+        run: sleep 30
+        
       - name: Checkout again
         uses: actions/checkout@v2
 
@@ -53,5 +55,7 @@ jobs:
         run: |
           VERSION=$(grep -oP '<Version>\K[^<]+' CmsWebApi.csproj)
           echo "$VERSION"
+
+     
 
     
