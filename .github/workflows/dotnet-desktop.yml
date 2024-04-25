@@ -28,7 +28,7 @@ jobs:
           echo "$VERSION_NEW"
    
            # Replace the version number placeholder in the csproj file
-          sed -i "s/<Version>${EXTRACTED_VERSION}<\/Version>/<Version>${UPDATED_VERSION}<\/Version>/" CmsWebApi.csproj
+          sed -i "s/<Version>${VERSION}<\/Version>/<Version>${VERSION_NEW}<\/Version>/" CmsWebApi.csproj
 
       
           git config --global user.name "nandireddy12321"
