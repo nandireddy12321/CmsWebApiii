@@ -5,7 +5,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Version>13.0.0.6</Version>
+    <Version>14.0.0.1</Version>
     <VersionPrefix>13.0.0.2</VersionPrefix>
 
     <ProductVersion>
