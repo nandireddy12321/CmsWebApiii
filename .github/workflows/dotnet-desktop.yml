@@ -18,7 +18,27 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.x' # adjust to your version
-
+        
+      - name: Get previous build number
+        id: get_build_number
+        run: |
+          if [[ ${{ github.ref }} == 'refs/heads/master' ]]; then
+            branch=main
+          elif [[ ${{ github.ref }} == 'refs/heads/lokesh' ]]; then
+            branch=lokesh
+          elif [[ ${{ github.ref }} == refs/heads/release/* ]]; then
+            branch=$(echo "${{ github.ref }}" | cut -d'/' -f3)
+          else
+            branch=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///')
+          fi
+          # Fetch the top-most build number for the branch
+          build_numbers=$(curl -s -H "Authorization: Bearer ${{ secrets.lokipat }}" "https://api.github.com/nandireddy12321/CmsWebApi/actions/runs?branch=${branch}&per_page=5" | jq -r '.workflow_runs[0].run_number')
+          echo "::set-output name=build_number::$build_numbers"
+          echo "$build_numbers"
+        
+      - name: Use build number
+        run: |
+          echo "Top most build number for ${{ github.ref }} is ${{ steps.get_build_number.outputs.build_number }}"
       - name: Extract version number
         id: extract_version
         run: |
@@ -35,7 +55,7 @@ jobs:
           VERSION_PLACEHOLDER="\?"
 
           # Extract the build number from GITHUB_RUN_NUMBER
-          BUILD_NUMBER=${GITHUB_RUN_NUMBER}
+          BUILD_NUMBER=${build_numbers}
 
           # Update the version number to include the build number
           UPDATED_VERSION=$(echo "${EXTRACTED_VERSION//$VERSION_PLACEHOLDER/$BUILD_NUMBER}")
