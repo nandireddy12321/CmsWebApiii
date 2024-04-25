@@ -22,15 +22,17 @@ jobs:
         id: extract_version
         run: |
           VERSION=$(grep -oP '<Version>\K[^<]+' CmsWebApi.csproj)
-          echo "::set-output name=version::$VERSION"
+          VERSION_NEW=$(echo "$VERSION" | awk '{split($NF,v,/[.]/); $NF=v[1]"."v[2]"."v[3]"." ++v[4]}1')
+          echo "::set-output name=version::$VERSION_NEW"
 
       - name: Update version number
+        id: updateversionnumber
         run: |
           # Get the extracted version number
           EXTRACTED_VERSION=$(echo "${{ steps.extract_version.outputs.version }}")
 
           # Define a variable to represent the placeholder in the version number
-          VERSION_PLACEHOLDER='?'
+          VERSION_PLACEHOLDER='/2'
 
           # Extract the build number from GITHUB_RUN_NUMBER
           BUILD_NUMBER=${GITHUB_RUN_NUMBER}
@@ -41,8 +43,25 @@ jobs:
           # Replace the version number placeholder in the csproj file
           sed -i "s/<Version>${EXTRACTED_VERSION}<\/Version>/<Version>${UPDATED_VERSION}<\/Version>/" CmsWebApi.csproj
 
-      - name: Build project
-        run: dotnet build CmsWebApi.csproj
+      - name: Commit changes
+        run: |
+          git config --global user.name "nandireddy12321"
+          git config --global user.email "nandireddy12321@gmail.com"
+          git add CmsWebApi.csproj
+          git commit -m "Update version to ${{ steps.update_version.outputs.UPDATED_VERSION }}"
 
+      - name: Push changes
+        run: |
+          git push origin HEAD:${{ github.ref }}
+
+      - name: Checkout again
+        uses: actions/checkout@v2
+
+      
+      - name: Extract version number
+        
+        run: |
+          VERSION=$(grep -oP '<Version>\K[^<]+' CmsWebApi.csproj)
+          echo "$VERSION"
 
     
