@@ -54,6 +54,9 @@ jobs:
 
       - name: Checkout again
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}  # Ensure you're checking out the main branch
+          clean: true  # Ensure a clean checkout
 
       
       - name: Extract version number
