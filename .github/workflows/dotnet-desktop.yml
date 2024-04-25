@@ -40,7 +40,7 @@ jobs:
           echo "HTTP Status Code: $http_status"
           echo "API Response: $response_body"
           if [[ "$http_status" == "200" ]]; then
-            build_number=$(echo "$response_body" | jq -r '.workflow_runs[0].run_number')
+            build_number=$("$response_body" | jq -r '.workflow_runs[0].run_number')
             echo "::set-output name=build_number::$build_number"
           else
             echo "API request failed with status code $http_status"
