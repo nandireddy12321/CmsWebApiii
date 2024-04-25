@@ -35,8 +35,12 @@ jobs:
           git config --global user.email "nandireddy12321@gmail.com"
           git add CmsWebApi.csproj
           git commit -m "$VERSION_NEW"
-
+          
+      - name: Push changes
+        run: |
           git push origin HEAD:${{ github.ref }}
+          env:
+          GITHUB_TOKEN: ${{ secrets.LOKIPAT }}
 
       - name: Checkout again
         uses: actions/checkout@v2
