@@ -34,7 +34,7 @@ jobs:
             branch=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///')
           fi
           # Fetch the top-most build number for the branch
-          response=$(curl -s -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://github.com/nandireddy12321/CmsWebApi/actions/runs?branch=${branch}&per_page=5")
+          response=$(curl -s -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://github.com/nandireddy12321/CmsWebApi/actions/workflows/dotnet-desktop.yml?query=branch%3Alokesh&per_page=5")
           http_status=$(echo "$response" | tail -c 4)  # Extract the last 3 characters (HTTP status code)
           response_body=$(echo "$response" | head -c -4)  # Remove the last 3 characters (HTTP status code)
           echo "HTTP Status Code: $http_status"
