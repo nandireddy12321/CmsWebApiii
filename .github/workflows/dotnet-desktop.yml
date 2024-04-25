@@ -34,9 +34,13 @@ jobs:
             branch=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///')
           fi
           # Fetch the top-most build number for the branch
-          build_numbers=$(curl -s -H "Authorization: Bearer ${{ secrets.lokipat }}" "https://api.github.com/nandireddy12321/CmsWebApi/actions/runs?branch=${branch}&per_page=5" | jq -r '.workflow_runs[0].run_number')
-          echo "::set-output name=build_number::$build_numbers"
-          echo "$build_numbers"
+          response=$(curl -s -H "Authorization: Bearer ${{ secrets.lokipat }}" "https://api.github.com/nandireddy12321/CmsWebApi/actions/runs?branch=${branch}&per_page=5" | jq -r '.workflow_runs[0].run_number')
+            if [[ "$response" == "null" ]]; then
+            echo "::set-output name=build_number::0"  # Set default build number to 0 if no runs found
+           else
+            build_number=$(echo "$response" | jq -r '.workflow_runs[0].run_number')
+            echo "::set-output name=build_number::$build_number"
+          fi
         
       - name: Use build number
         run: |
