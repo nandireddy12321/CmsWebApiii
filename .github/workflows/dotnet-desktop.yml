@@ -40,7 +40,7 @@ jobs:
         run: |
           git push origin HEAD:${{ github.ref }}
           env:
-          GITHUB_TOKEN: ${{ secrets.LOKIPAT }}
+          GITHUB_TOKEN: ${{ secrets.lokipat }}
 
       - name: Checkout again
         uses: actions/checkout@v2
