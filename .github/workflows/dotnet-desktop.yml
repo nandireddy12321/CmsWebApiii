@@ -35,12 +35,18 @@ jobs:
           fi
           # Fetch the top-most build number for the branch
           response=$(curl -s -H "Authorization: Bearer ${{ secrets.lokipat }}" "https://api.github.com/nandireddy12321/CmsWebApi/actions/runs?branch=${branch}&per_page=5" | jq -r '.workflow_runs[0].run_number')
-            if [[ "$response" == "null" ]]; then
-            echo "::set-output name=build_number::0"  # Set default build number to 0 if no runs found
-           else
-            build_number=$(echo "$response" | jq -r '.workflow_runs[0].run_number')
+          http_status="${response:(-3)}"  # Extract the last 3 characters (HTTP status code)
+          response_body="${response::-3}"  # Remove the last 3 characters (HTTP status code)
+          echo "HTTP Status Code: $http_status"
+          echo "API Response: $response_body"
+          if [[ "$http_status" -eq "200" ]]; then
+            build_number=$(echo "$response_body" | jq -r '.workflow_runs[0].run_number')
             echo "::set-output name=build_number::$build_number"
+          else
+            echo "API request failed with status code $http_status"
+            echo "::set-output name=build_number::0"  # Set default build number to 0 in case of failure
           fi
+
         
       - name: Use build number
         run: |
