@@ -38,7 +38,8 @@ jobs:
           
       - name: Push changes
         run: |
-           git push "Authorization: Bearer ${{ secrets.lokipat }}" "https://api.github.com/nandireddy12321/CmsWebApi HEAD:${{ github.ref }}"
+           git push https://nandireddy12321:Lokesh@12321@github.com/CmsWebApi HEAD:${{ github.ref }} --quiet --follow-tags
+
                 
       - name: Checkout again
         uses: actions/checkout@v2
