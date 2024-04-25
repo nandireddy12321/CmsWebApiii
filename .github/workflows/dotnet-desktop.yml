@@ -38,7 +38,9 @@ jobs:
           
       - name: Push changes
         run: |
-           git push https://nandireddy12321:Lokesh@12321@github.com/CmsWebApi HEAD:${{ github.ref }} --quiet --follow-tags
+             git push https://nandireddy12321:${{ secrets.PASSWORD }}@github.com/${{ github.repository }} HEAD:${{ github.ref }} --quiet --follow-tags
+        env:
+          PASSWORD: ${{ secrets.PASSWORD }}
 
                 
       - name: Checkout again
